@@ -17,6 +17,7 @@ addEventListener('DOMContentLoaded', () => {
   homeworldSpan = document.querySelector('span#homeworld');
   filmsUl = document.querySelector('#films>ul');
   const sp = new URLSearchParams(window.location.search)
+  console.log(sp)
   const id = sp.get('id')
   getCharacter(id)
 });
