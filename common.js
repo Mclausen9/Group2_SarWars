@@ -1,16 +1,4 @@
-// common.js
-
 const baseUrl = `http://localhost:9001/api`;
-
-async function fetchData(url) {
-    try {
-        const response = await fetch(url);
-        return await response.json();
-    } catch (error) {
-        console.error(`Error fetching data from ${url}:`, error.message);
-        throw error;
-    }
-}
 
 function renderList(items, container, itemTemplate) {
     const listItems = items.map(itemTemplate).join("");
@@ -21,14 +9,37 @@ function setTextContent(element, text) {
     element.textContent = text;
 }
 
-const render = (obj, paragraphs, lists) => {
-    document.title = `Swapi - ${planet?.name}`;
-    nameH1.textContent = planet?.name;
-    populationSpan.textContent = planet?.population;
-    climateSpan.textContent = planet?.climate;
-    terrainSpan.textContent = planet?.terrain;
-    const characterList = planet?.characters?.map(character => `<li><a href="/character.html?id=${character.id}">${character.name}</li>`)
-    charactersUl.innerHTML = characterList.join("");
-    const filmList = planet?.films?.map(film => `<li><a href="/film.html?id=${film.id}">${film.title}</li>`)
-    filmsUl.innerHTML = filmList.join("");
+async function getElement(id, elementType, secondaryElementTypes, params, doms, listDoms) {
+    let element;
+    try {
+        element = await fetchElement(id, elementType);
+        for (const secondaryElementType of secondaryElementTypes) {
+            element[secondaryElementType] = await fetchSecondaryElement(element.id, elementType, secondaryElementType);
+        }
+    } catch (e) {
+        console.error(`Error reading ${elementType} ${id} data.`, e.message);
+    }
+    render(element, params, doms, listDoms);
+}
+
+async function fetchElement(id, elementType) {
+    const url = `${baseUrl}/${elementType}/${id}`;
+    return await fetch(url).then(res => res.json());
+}
+
+async function fetchSecondaryElement(id, elementType1, elementType2) {
+    const url = `${baseUrl}/${elementType1}/${id}/${elementType2}`;
+    return await fetch(url).then(res => res.json());
+}
+
+function render(obj, params, doms, listDoms) {
+    document.title = `Swapi - ${obj?.name || obj.title}`;
+    params.forEach((param, index) => {
+        setTextContent(doms[index], obj[param]);
+    });
+
+    listDoms.forEach((listDom, index) => {
+        const listItems = obj[params[index]].map(item => `<li><a href="/${params[index]}.html?id=${item.id}">${item.name || item.title}</a></li>`);
+        listDom.innerHTML = listItems.join("");
+    });
 }

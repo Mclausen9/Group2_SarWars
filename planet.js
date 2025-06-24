@@ -16,6 +16,11 @@ addEventListener('DOMContentLoaded', () => {
     filmsUl = document.querySelector('#films>ul');
     const sp = new URLSearchParams(window.location.search)
     const id = sp.get('id')
+    const doms = [nameH1,populationSpan,climateSpan,terrainSpan ]
+    const listDoms = [charactersUl, filmsUl]
+    const elementType1 = "planet"
+    const secondaryElementTypes = ["characters", "films"]
+
     getPlanet(id)
 });
 
