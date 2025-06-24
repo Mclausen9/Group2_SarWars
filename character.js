@@ -2,6 +2,7 @@ let nameH1;
 let birthYearSpan;
 let heightSpan;
 let massSpan;
+let speciesSpan;
 let filmsDiv;
 let planetDiv;
 const baseUrl = `http://localhost:9001/api`;
@@ -12,6 +13,7 @@ addEventListener('DOMContentLoaded', () => {
   birthYearSpan = document.querySelector('span#birth_year');
   massSpan = document.querySelector('span#mass');
   heightSpan = document.querySelector('span#height');
+  speciesSpan = document.querySelector('span#species')
   homeworldSpan = document.querySelector('span#homeworld');
   filmsUl = document.querySelector('#films>ul');
   const sp = new URLSearchParams(window.location.search)
@@ -26,6 +28,7 @@ async function getCharacter(id) {
     character = await fetchCharacter(id)
     character.homeworld = await fetchHomeworld(character)
     character.films = await fetchFilms(character)
+    character.species = await fetchSpecies(character)
   }
   catch (ex) {
     console.error(`Error reading character ${id} data.`, ex.message);
@@ -53,6 +56,13 @@ async function fetchFilms(character) {
   return films;
 }
 
+async function fetchSpecies(character) {
+  const url = `${baseUrl}/films/${character?.id}/species`;
+  const films = await fetch(url)
+    .then(res => res.json())
+  return films;
+}
+
 const renderCharacter = character => {
   document.title = `SWAPI - ${character?.name}`;  // Just to make the browser tab say their name
   nameH1.textContent = character?.name;
@@ -62,4 +72,5 @@ const renderCharacter = character => {
   homeworldSpan.innerHTML = `<a href="/planet.html?id=${character?.homeworld.id}">${character?.homeworld.name}</a>`;
   const filmsLis = character?.films?.map(film => `<li><a href="/film.html?id=${film.id}">${film.title}</li>`)
   filmsUl.innerHTML = filmsLis.join("");
+  speciesSpan.innerHTML = `<a href="/species.html?id=${character?.species.id}">${character?.species.name}</a>`;
 }
