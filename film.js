@@ -28,7 +28,10 @@ async function getFilm(id) {
     film = await fetchFilm(id)
     film.characters = await fetchCharacters(film)
     film.planets = await fetchPlanets(film)
+<<<<<<< HEAD
     film.species = await fetchSpecies(film)
+=======
+>>>>>>> 00fe3844e0686a9c0334eb8b018fce81519b4990
   }
   catch (ex) {
     console.error(`Error reading film ${id} data.`, ex.message);
@@ -72,7 +75,11 @@ const renderFilm = film => {
   const charactersList = film?.characters?.map(characters => `<li><a href="/character.html?id=${characters.id}">${characters.name}</li>`)
   charactersUl.innerHTML = charactersList.join("");
   const planetsList = film?.planets?.map(planets => `<li><a href="/planet.html?id=${planets.id}">${planets.name}</li>`)
+<<<<<<< HEAD
   speciesUl.innerHTML = speciesList.join("");
   const speciesList = film?.species?.map(species => `<li><a href="/planet.html?id=${species.id}">${species.name}</li>`)
   speciesUl.innerHTML = speciesList.join("");
+=======
+  planetsUl.innerHTML = planetsList.join("");
+>>>>>>> 00fe3844e0686a9c0334eb8b018fce81519b4990
 }
