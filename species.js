@@ -2,7 +2,8 @@
 const sp = new URLSearchParams(window.location.search); 
 const id = sp.get('id');
 
-fetch(`http://localhost:9001/api/species/${id}`)
+fetch(`http://localhost:9001/api/films/${id}/species`)
+
   .then(response => {
     if (!response.ok) {
       throw new Error("Failed to fetch species data");
