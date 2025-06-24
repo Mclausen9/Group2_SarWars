@@ -18,7 +18,7 @@ addEventListener('DOMContentLoaded', () => {
   const sp = new URLSearchParams(window.location.search)
   const id = sp.get('id')
 
-  fetch(`http://localhost:9001/flims?${id}`)
+  fetch(`${baseUrl}i/films/${id}`)
   getFilm(id)
 });
 
@@ -27,7 +27,7 @@ async function getFilm(id) {
   try {
     film = await fetchFilm(id)
     film.characters = await fetchCharacters(film)
-    film.planets = await fetchHomeworld(film)
+    film.planets = await fetchPlanets(film)
   }
   catch (ex) {
     console.error(`Error reading film ${id} data.`, ex.message);
@@ -41,11 +41,11 @@ async function fetchFilm(id) {
     .then(res => res.json())
 }
 
-async function fetchHomeworld(film) {
-  const url = `${baseUrl}/films/${film?.id}/homeworld`;
+async function fetchPlanets(film) {
+  const url = `${baseUrl}/films/${film?.id}/planets`;
   const planets = await fetch(url)
     .then(res => res.json())
-  return homeworld;
+  return planets;
 }
 
 async function fetchCharacters(film) {
@@ -65,10 +65,9 @@ async function fetchSpecies(film) {
 const renderFilm = film => {
   document.title = `SWAPI - ${film?.title}`;
   filmH1.textContent = film?.title;
-  releasedSpan.textContent = film?.released;
+  releasedSpan.textContent = film.release_date;
   directorSpan.textContent = film?.director;
-  episodeSpan.textContent = film?.episode;
-  homeworldSpan.innerHTML = `<a href="/homeworld.html?id=${film?.homeworld?.id}">${film?.homeworld?.name}</a>`;
+  episodeSpan.textContent = film?.episode_id;
   const charactersLis = film?.characters?.map(characters => `<li><a href="/characters.html?id=${characters.id}">${characters.name}</li>`)
   charactersUl.innerHTML = charactersLis.join("");
 }
