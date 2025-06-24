@@ -1,15 +1,15 @@
-const baseUrl = `http://localhost:9001/api`;
+export const baseUrl = `http://localhost:9001/api`;
 
-function renderList(items, container, itemTemplate) {
+export function renderList(items, container, itemTemplate) {
     const listItems = items.map(itemTemplate).join("");
     container.innerHTML = listItems;
 }
 
-function setTextContent(element, text) {
+export function setTextContent(element, text) {
     element.textContent = text;
 }
 
-async function getElement(id, elementType, secondaryElementTypes, params, doms, listDoms) {
+export async function getElement(id, elementType, secondaryElementTypes, params, doms, listDoms) {
     let element;
     try {
         element = await fetchElement(id, elementType);
@@ -22,24 +22,37 @@ async function getElement(id, elementType, secondaryElementTypes, params, doms, 
     render(element, params, doms, listDoms);
 }
 
-async function fetchElement(id, elementType) {
+export async function fetchElement(id, elementType) {
     const url = `${baseUrl}/${elementType}/${id}`;
     return await fetch(url).then(res => res.json());
 }
 
-async function fetchSecondaryElement(id, elementType1, elementType2) {
+export async function fetchSecondaryElement(id, elementType1, elementType2) {
     const url = `${baseUrl}/${elementType1}/${id}/${elementType2}`;
     return await fetch(url).then(res => res.json());
 }
 
-function render(obj, params, doms, listDoms) {
+export function render(obj, params, doms, listDoms) {
     document.title = `Swapi - ${obj?.name || obj.title}`;
-    params.forEach((param, index) => {
-        setTextContent(doms[index], obj[param]);
-    });
 
-    listDoms.forEach((listDom, index) => {
-        const listItems = obj[params[index]].map(item => `<li><a href="/${params[index]}.html?id=${item.id}">${item.name || item.title}</a></li>`);
-        listDom.innerHTML = listItems.join("");
-    });
+    // Iterate over params and doms, setting text content only if the property exists
+    for (let index = 0; index < params.length; index++) {
+        const param = params[index];
+        if (obj[param] !== undefined && doms[index] !== undefined) {
+            setTextContent(doms[index], obj[param]);
+        }
+    }
+
+    // Iterate over listDoms, populating lists only if the property exists
+    for (let index = 0; index < listDoms.length; index++) {
+        const listDom = listDoms[index];
+        const param = params[index + doms.length]; // Adjust index to match listDoms
+        if (obj[param] !== undefined && Array.isArray(obj[param])) {
+            const listItems = obj[param].map(item => `<li><a href="/${param.slice(0,-1)}.html?id=${item.id}">${item.name || item.title}</a></li>`);
+            listDom.innerHTML = listItems.join("");
+        } else {
+            listDom.innerHTML = ""; // Optionally clear the list if no items are available
+        }
+    }
 }
+
