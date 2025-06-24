@@ -15,7 +15,7 @@ p {
   --dark1: black;
   --light1: white;
   --dark2: darkblue;
-  --light2: lightblue;
+  --light2: rgb(223, 243, 41);
   background-color: var(--light1);
   color: var(--dark1);
 }
