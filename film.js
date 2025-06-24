@@ -18,7 +18,6 @@ addEventListener('DOMContentLoaded', () => {
   const sp = new URLSearchParams(window.location.search)
   const id = sp.get('id')
 
-  fetch(`${baseUrl}i/films/${id}`)
   getFilm(id)
 });
 
@@ -68,6 +67,8 @@ const renderFilm = film => {
   releasedSpan.textContent = film.release_date;
   directorSpan.textContent = film?.director;
   episodeSpan.textContent = film?.episode_id;
-  const charactersLis = film?.characters?.map(characters => `<li><a href="/characters.html?id=${characters.id}">${characters.name}</li>`)
-  charactersUl.innerHTML = charactersLis.join("");
+  const charactersList = film?.characters?.map(characters => `<li><a href="/character.html?id=${characters.id}">${characters.name}</li>`)
+  charactersUl.innerHTML = charactersList.join("");
+  const planetsList = film?.planets?.map(planets => `<li><a href="/planet.html?id=${planets.id}">${planets.name}</li>`)
+  planetsUl.innerHTML = planetsList.join("");
 }
