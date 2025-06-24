@@ -2,7 +2,9 @@
 const sp = new URLSearchParams(window.location.search); 
 const id = sp.get('id');
 
-fetch(`http://localhost:9001/api/films/${id}/species`)
+console.log(id)
+
+fetch(`http://localhost:9001/api/species/${id}`)
 
   .then(response => {
     if (!response.ok) {
@@ -10,13 +12,13 @@ fetch(`http://localhost:9001/api/films/${id}/species`)
     }
     return response.json();
   })
-  .then(speciesList => {
-    const species = speciesList.find(s => s.id === parseInt(id));
-
-    if (species) {
-      document.getElementById("name").textContent = species.name;
-      document.getElementById("classification").textContent = species.classification;
-      document.getElementById("designation").textContent = species.designation;
+  .then(data => {
+ 
+    if (data) {
+      document.getElementById("name").textContent = data.name;
+      document.getElementById("classification").textContent = data.classification;
+      document.getElementById("designation").textContent = data.designation;
+      document.getElementById("averagelifespan").textContent = data.average_lifespan;
       // Add similar lines for other details
     } else {
       document.getElementById("name").textContent = "Species not found";
